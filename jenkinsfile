@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    triggers {
+        githubPush()
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/iam-ganeshjadhav/Deploy_a_Static_Website_-_Terraform_-_AWSEc2_-_Jenkins.git'
+            }
+        }
+
+        stage('Deploy to EC2') {
+            steps {
+                sshagent(['node-key']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no ubuntu@13.232.185.76 "
+                            sudo rm -rf /var/www/html/*
+                            sudo git clone https://github.com/iam-ganeshjadhav/Deploy_a_Static_Website_-_Terraform_-_AWSEc2_-_Jenkins.git /var/www/html
+                            sudo chown -R www-data:www-data /var/www/html
+                            sudo chmod -R 755 /var/www/html
+                            sudo systemctl restart apache2
+                        "
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success { echo "Website Updated Successfully!" }
+        failure { echo "Deployment Failed!" }
+    }
+}
