@@ -18,7 +18,7 @@ pipeline {
             steps {
                 sshagent(['node-key']) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no ubuntu@13.232.185.76 "
+                        ssh -o StrictHostKeyChecking=no ubuntu@13.233.117.50 "
                             sudo rm -rf /var/www/html/*
                             sudo git clone https://github.com/iam-ganeshjadhav/Deploy_a_Static_Website_-_Terraform_-_AWSEc2_-_Jenkins.git /var/www/html
                             sudo chown -R www-data:www-data /var/www/html
